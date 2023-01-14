@@ -1,0 +1,17 @@
+﻿.card-container {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.card{
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem;
+}
+
+.card > img{
+    object-fit: cover;
+    object-position: center;
+    width: 10rem;
+    border-radius: 0.25rem;
+}

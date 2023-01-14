@@ -1,0 +1,44 @@
+﻿@page "/Rumble"
+@using BlazorApp.Shared;
+@inject HttpClient Http
+
+<div>
+    <input type="text" @bind-value="@_query" />
+    <button @onclick="Search">Search</button>
+</div>
+<br/>
+@if (_channel is not null)
+{
+    <div class="card-container">
+
+    @foreach (var item in _channel.Items)
+    {
+        <div class="card">
+            <img src="@item.img"/>
+            <div>
+                <div>@item.Title</div>
+                <div>@item.PubDate</div>
+            </div>
+
+        </div>
+
+    }
+    </div>
+}
+
+
+@code {
+    private Channel _channel = default!;
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    _channel = await Http.GetFromJsonAsync<Channel>("/api/rumblerss/Styxhexenhammer666") ?? new Channel();
+    //}
+
+    private string _query = "Styxhexenhammer666";
+
+    private async Task Search()
+    {
+        _channel = await Http.GetFromJsonAsync<Channel>($"/api/rumblerss/{_query}") ?? new Channel();
+    }
+}

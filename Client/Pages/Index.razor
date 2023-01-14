@@ -6,9 +6,15 @@
 
 <button @onclick="FetchData">Fetch Data</button>
 
-@code{
+<button @onclick="Rumble">Rumble</button>
+
+@code {
     private void FetchData()
     {
         Navigation.NavigateTo("/FetchData");
+    }
+    private void Rumble()
+    {
+        Navigation.NavigateTo("/Rumble");
     }
 }
