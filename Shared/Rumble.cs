@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace BlazorApp.Shared
+﻿namespace BlazorApp.Shared
 {
     public enum RumbleType
     {
