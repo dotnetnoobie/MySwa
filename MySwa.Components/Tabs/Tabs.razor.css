@@ -1,0 +1,25 @@
+﻿.container {
+    width: 100%; 
+    /* background-color: red;*/
+    font-size: 1.0rem;
+    border-radius: 0.25em; 
+}
+
+.btn-group {
+  width: 100%;
+  /*background-color: green;*/
+  display: flex;
+  justify-content: space-around;
+}
+
+button[type=button] {
+  font-size: 1.5em;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.content {
+  margin: 0.25em;
+  /*  background-color: lightblue;*/
+}

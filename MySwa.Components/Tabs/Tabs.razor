@@ -1,0 +1,45 @@
+﻿@namespace MySwa.Components
+
+<div class="container">
+    <CascadingValue Value="this">
+        <div class="btn-group" role="group">
+            @foreach (Tab tab in tabs)
+            {
+                <button type="button" class="btn @GetButtonClass(tab)" @onclick=@(() => ActivateTab(tab))>
+                    @tab.Text
+                </button>
+            }
+        </div>
+        <div class="content">
+            @ChildContent
+        </div>
+    </CascadingValue>
+</div>
+
+@code {
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = default!;
+
+    public Tab ActiveTab { get; set; } = default!;
+
+    List<Tab> tabs = new List<Tab>();
+
+    internal void AddTab(Tab tab)
+    {
+        tabs.Add(tab);
+        if (tabs.Count == 1)
+            ActiveTab = tab;
+        StateHasChanged();
+    }
+
+    string GetButtonClass(Tab tab)
+    {
+        return tab == ActiveTab ? "btn-primary" : "btn-secondary";
+    }
+
+    void ActivateTab(Tab tab)
+    {
+        ActiveTab = tab;
+    }
+}

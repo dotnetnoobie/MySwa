@@ -1,30 +1,48 @@
 ﻿@page "/Rumble"
 @using BlazorApp.Shared;
+@using System.Xml.Linq;
 @inject HttpClient Http
 
 <div>
     <input type="text" @bind-value="@_query" />
     <button @onclick="Search">Search</button>
 </div>
-<br/>
-@if (_channel is not null)
-{
-    <div class="card-container">
+<br />
 
-    @foreach (var item in _channel.Items)
-    {
-        <div class="card">
-            <img src="@item.img"/>
-            <div>
-                <div>@item.Title</div>
-                <div>@item.PubDate</div>
+<Tabs>
+    <Tab Text="one">
+        @if (_channel is not null)
+        {
+            <div class="card-container">
+
+                @foreach (var item in _channel.Items)
+                {
+                    <div class="card">
+                        <img src="@item.img" />
+                        <div>
+                            <div>@item.Title</div>
+                            <div>@item.PubDate</div>
+                        </div>
+
+                    </div>
+
+                }
             </div>
-
-        </div>
-
-    }
-    </div>
-}
+        }
+    </Tab>
+    <Tab Text="Json">
+        <pre>
+            @GetJson()
+        </pre>
+    </Tab>
+    <Tab Text="Rss">
+        <pre>
+        <textarea style="width: 100%; height: 100%;">
+                @GetRss()
+            </textarea>
+        </pre>
+    </Tab>
+</Tabs>
 
 
 @code {
@@ -40,5 +58,57 @@
     private async Task Search()
     {
         _channel = await Http.GetFromJsonAsync<Channel>($"/api/rumblerss/{_query}") ?? new Channel();
+        //var type = _channel.Type == RumbleType.Channel ? "c" : "user";
+        //_channel.Link = $"https://rumble.com/{type}/{_query}";
+    }
+
+    private string GetJson()
+    {
+        var options = new System.Text.Json.JsonSerializerOptions();
+        options.WriteIndented = true;
+
+
+        return System.Text.Json.JsonSerializer.Serialize(_channel, options);
+    }
+
+    private string GetRss()
+    {
+        // var type = _channel.Type == RumbleType.Channel ? "c" : "user";
+
+        var document = new XDocument(
+                                 new XDeclaration("1.0", "utf-8", "yes"),
+                                 new XElement("rss",
+                                     new XAttribute("version", "2.0"),
+                                     new XElement("channel",
+                                        new XElement("title", _query),
+                                        new XElement("link", _channel.Link),
+                                        new XElement("type", _channel.Type),
+                                        //new XElement("link", $"https://rumble.com/{type}/{_query}"),
+                                        CreateElements(_channel.Items))
+        ));
+
+        var feed = document.ToString();
+
+        return feed;
+    }
+
+    public IEnumerable<XElement> CreateElements(IEnumerable<Item> items)
+    {
+        List<XElement> list = new List<XElement>();
+
+        foreach (var item in items)
+        {
+
+            XElement itemElement = new XElement("item",
+                                     new XElement("id", item.Url),
+                                     new XElement("title", item.Title),
+                                     new XElement("link", item.Url),
+                                     new XElement("image", item.img),
+                                     new XElement("pubDate", item.PubDate)
+                                );
+
+            list.Add(itemElement);
+        }
+        return list;
     }
 }

@@ -12,6 +12,8 @@ namespace Api.Services
         //Task<Entries> GetHtml(string channel);
     }
 
+    public record Entries(RumbleType type, IHtmlCollection<IElement> items);
+
     public class Rumble : IRumble
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -42,11 +44,13 @@ namespace Api.Services
                 items.Add(item);
             }
 
-            var channel = new Channel();
+            var type = entries.type == RumbleType.Channel ? "c" : "user";
+
+            var channel = new BlazorApp.Shared.Channel();
             channel.Title = query;
-            channel.Link = query;
+            channel.Link = $"https://rumble.com/{type}/{query}";
             channel.Items = items;
-            channel.Type = entries.type;
+            channel.Type = entries.type == RumbleType.Channel ? "channel" : "user";
 
             return channel;
         }
@@ -94,9 +98,6 @@ namespace Api.Services
             }
             return list;
         }
-
-        public record Entries(RumbleType type, IHtmlCollection<IElement> items);
-
     }
 
 }

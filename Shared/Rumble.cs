@@ -10,7 +10,8 @@
     {
         public string Title { get; set; }
         public string Link { get; set; }
-        public RumbleType Type { get; set; }
+        // public RumbleType Type { get; set; }
+        public string Type { get; set; }
         public IEnumerable<Item> Items { get; set; } = Enumerable.Empty<Item>();
     }
 

@@ -1,0 +1,30 @@
+﻿@namespace MySwa.Components
+
+<div class="tabs-container"> 
+    @if (Parent.ActiveTab == this)
+    {
+        @ChildContent
+    }
+</div>
+
+@code {
+
+    [CascadingParameter]
+    private Tabs Parent { get; set; } = default!;
+
+    [Parameter]
+    public string Text { get; set; } = default!;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        if (Parent == null)
+            throw new ArgumentNullException(nameof(Parent), "Tab must exist within a Tabs component");
+
+        base.OnInitialized();
+
+        Parent.AddTab(this);
+    }
+}
